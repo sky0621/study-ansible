@@ -1,0 +1,45 @@
+---
+- name: Playbook Tutorial
+  hosts: all
+  become: true
+  tasks:
+    - name: libselinux-python install
+      yum:
+        name: libselinux-python
+        state: present
+
+    - name: EPEL Repository Install
+      yum:
+        name: epel-release
+        state: present
+
+    - name: Nginx Install
+      yum:
+        name: nginx
+        state: present
+
+    - name: Nginx Service Start
+      service:
+        name: nginx
+        state: started
+        enabled: true
+
+    - name: /tmp/dir1 made
+      file:
+        path: /tmp/dir1
+        state: directory
+
+    - name: Rename /tmp/dir1 to /tmp/link_to_dir1
+      file:
+        src: /tmp/dir1
+        dest: /tmp/link_to_dir1
+        state: link
+
+- name: SSH Key Generated
+  hosts: all
+  tasks:
+    - name: tmpディレクトリ内にパスフレーズなしのSSH鍵を生成
+      command: "/usr/bin/ssh-keygen -b 2048 -t rsa -N '' -f /tmp/new-id_rsa"
+      args:
+        creates: /tmp/new-id_rsa
+
